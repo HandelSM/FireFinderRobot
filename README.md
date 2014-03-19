@@ -11,6 +11,6 @@ Existe um ramo enorme na área de robôs que detectam incêndios. Diferentes rob
 
 O FFR tem como objetivo detectar incêndios em estágio inicial que nem sempre são vistos por humanos. Desta forma combatem incêndios que podem ser gerados por mal contato, problemas na rede elétrica, etc. 
 
- ##Funcionamento
+##Funcionamento
       
 O FFR funcionará por meio de um programa feito na plataforma Arduino e contará com sensores de distância e calor para percepção do melhor caminho a ser feito e para detectar o incêndio.  
