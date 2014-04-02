@@ -22,20 +22,26 @@ int New_Address = 248; // 0xF8
 #define GainRegister 0x00 // Setup Analogue Gain -- http://www.robot-electronics.co.uk/htm/srf08tech.html section "Analogue Gain"
 #define RangeLocation 0xFF // Setup Range Location -- http://www.robot-electronics.co.uk/htm/srf08tech.html section "Changing the Range"
 
+
+byte LED = 13;
+byte level = HIGH;
 int DEBUG = 1;
 char unit = 'c'; // 'i' for inches, 'c' for centimeters, 'm' for micro-seconds
 float sensorReading = 0;
 int time = 70;
-
+byte readingTime = 500;
 
 void setup()
 {
-  MySonar.connect();  
+  MySonar.connect();
   MySonar.changeAddress(CommandRegister, New_Address, GainRegister, RangeLocation);
-  if (DEBUG){
+  if (DEBUG)
+  {
     Serial.begin(9600);
   }
   New_Address += 4; 
+  pinMode( LED, OUTPUT ); 
+  
   // offset address not sure why this is but it works for this address
 }
 
@@ -50,6 +56,27 @@ void loop()
   // read data from result register
   sensorReading = MySonar.readData(New_Address, 2);
   // print out distance
+  int blinkTime = map( sensorReading, 0, 100, 100, 4000 );
+  
+  if( blinkTime > 0 )
+  {
+    blinkTime -= 100;
+  }
+  else
+  {
+    level = !level;
+  }
+  if( readingTime > 0 )
+  {
+    readingTime -= 100;
+  }
+  else
+  {
+     blinkTime = map( sensorReading, 0, 100, 100, 4000 );
+     readingTime = 500;
+  }
+  delay (100);  
+  
   Serial.print("Distance: ");
   Serial.print(sensorReading);
   Serial.print(" units");
