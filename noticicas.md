@@ -1,5 +1,7 @@
 #Tropas de Mísseis Estratégicos serão protegidas por robôs
+
 24 Abril
+
 Em breve, as Tropas de Mísseis Estratégicos da Rússia (TME) podem receber o mais novo sistema de ataque e reconhecimento robótico móvel que servirá para proteção e defesa das instalações.
 
 O robô militar foi projetado especialmente para as unidades equipadas com complexos de mísseis Topol-M e Yars que terá como tarefa a eliminação de sabotadores junto com a máquina anti-subversão Typhoon. Esse é um carro de combate não tripulado com lagartas, guiado por controle remoto a uma distância de até 5 km. O complexo está equipado com vários tipos de munições.
