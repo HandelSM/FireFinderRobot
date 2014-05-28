@@ -1,7 +1,9 @@
 #include <Ultrasonic.h>
 
-#define TRIGGER_PIN  12
+#define TRIGGER_PIN  12 
 #define ECHO_PIN     13
+
+int accuracy = 100;
 
 Ultrasonic ultrasonic(TRIGGER_PIN, ECHO_PIN);
 
@@ -17,7 +19,7 @@ void setup()
 
 void loop()  
 {
-  if( i < 10 )
+  if( i < accuracy )
   {
     float cmFromWall;
     long microsec = ultrasonic.timing();
@@ -28,6 +30,7 @@ void loop()
   
   else
   {
+    distance = (int)(distance / accuracy);
     Serial.println( distance );
     distance = 0;
     i = 0;
