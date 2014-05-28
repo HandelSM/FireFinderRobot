@@ -5,19 +5,32 @@
 
 Ultrasonic ultrasonic(TRIGGER_PIN, ECHO_PIN);
 
+float distance = 0;
+int i = 0;
+
 void setup()  
 { 
   pinMode( TRIGGER_PIN, OUTPUT );
   pinMode( ECHO_PIN, INPUT );
   Serial.begin(9600);
-} 
+}
 
 void loop()  
-{ 
-  int cmFromWall;
-  long microsec = ultrasonic.timing();
-  cmFromWall = ultrasonic.convert(microsec, Ultrasonic::CM);
+{
+  if( i < 10 )
+  {
+    float cmFromWall;
+    long microsec = ultrasonic.timing();
+    cmFromWall = ultrasonic.convert(microsec, Ultrasonic::CM);
+    distance += cmFromWall;
+    i++;
+  }
   
-  Serial.println(cmFromWall);
+  else
+  {
+    Serial.println( distance );
+    distance = 0;
+    i = 0;
+  }
 }
 
