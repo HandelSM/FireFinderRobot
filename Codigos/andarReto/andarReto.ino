@@ -2,7 +2,7 @@
 #include <Ultrasonic.h>
 #define TRIGGER_PIN 12
 #define ECHO_PIN    13
-#define ACCURACY    100 // Define a precisão do sensor. Quanto maior acurracy, maior precisão porem menor velocidade de atualização da posição
+#define ACCURACY    100 // Quanto maior acurracy, maior precisão porem menor velocidade de atualização da posição
 
 float samples[ACCURACY];
 int index = 0; // Indice do sample
@@ -22,16 +22,16 @@ typedef struct motor
 };
 typedef struct motor Motor;
 
-Motor leftMotor = { 0, 240, 120 }; // Motor nomeMotor = { velocidade, velocidadeMaxima, velocidadeMinima }
-Motor rightMotor = { 250, 255, 130 };
+Motor leftMotor = { 255, 240, 120 }; // Motor nomeMotor = { velocidade, velocidadeMaxima, velocidadeMinima }
+Motor rightMotor = { 255, 255, 130 };
 
 
 //Encoder
-#define ENCODER1_PIN 2
-#define ENCODER2_PIN 3
+#define ENCODERR_PIN 2
+#define ENCODERL_PIN 3
 
-int count1 = 0;
-int count2 = 0;
+int countR = 0;
+int countL = 0;
 int currentE1 = LOW;
 int lastE1 = LOW;
 int currentE2 = LOW;
@@ -71,8 +71,10 @@ int distance()
 
 void setup ()
 {
-  pinMode( ENCODER1_PIN, INPUT );
-  pinMode( ENCODER2_PIN, INPUT );
+  pinMode( ENCODERR_PIN, INPUT );
+  pinMode( ENCODERL_PIN, INPUT );
+  pinMode( TRIGGER_PIN, OUTPUT );
+  pinMode( ECHO_PIN, INPUT );
   pinMode( MOTOR_R, OUTPUT );
   pinMode( MOTOR_L, OUTPUT );
   Serial.begin(9600);
@@ -80,21 +82,17 @@ void setup ()
 
 void loop()
 {
-  currentE1 = digitalRead( ENCODER1_PIN );
-  currentE2 = digitalRead( ENCODER2_PIN );
+  currentE1 = digitalRead( ENCODERR_PIN );
+  currentE2 = digitalRead( ENCODERL_PIN );
   
   if ( currentE1 != lastE1 )
   {
-    count1++;
-    //Serial.print("Count 1: ");
-    //Serial.println( count1 );
+    countR++;
   }
   
   if ( currentE2 != lastE2 )
   {
-    count2++;
-    //Serial.print("Count 2: ");
-    //Serial.println( count2 );
+    countL++;
   }
   
   lastE1 = currentE1;
@@ -109,15 +107,27 @@ void loop()
   
   if ( time % 1001 == 0 && !wasEncoder )
   {
-    int rpm1 = (count1 * 3/2);
-    int rpm2 = (count2 * 3/2);
-    Serial.print("RPM1: ");
-    Serial.print(rpm1);
-    Serial.print("  RPM2: ");
-    Serial.println(rpm2);
-    count1 = 0;
-    count2 = 0;
+    int rpmR = (countR * 3/2);
+    int rpmL = (countL * 3/2);
+    
+    if( rpmR > rpmL )
+    {
+      rightMotor.vel = rightMotor.vel - ( rpmR - rpL )/2;
+      leftMotor.vel = leftMotor.vel + ( rpmR - rpL )/2;
+    }
+    
+    if( rpmR < rpmL )
+    {
+      rightMotor.vel = rightMotor.vel + ( rpmR - rpL )/2;
+      leftMotor.vel = leftMotor.vel - ( rpmR - rpL )/2;     
+    }
+    
+    countR = 0;
+    countL = 0;
     wasEncoder = true;
   }
+  
+  analogWrite( MOTOR_R, rightMotor.vel );
+  analogWrite( MOTOR_L, leftMotor.vel );
 }
 
