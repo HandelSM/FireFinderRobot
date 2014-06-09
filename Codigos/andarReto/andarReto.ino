@@ -11,7 +11,7 @@ boolean wasSensor = false;
 Ultrasonic ultrasonic( TRIGGER_PIN, ECHO_PIN );
 
 //Motor
-#define MOTOR_L  9
+#define MOTOR_L  8
 #define MOTOR_R  10
 
 typedef struct motor
@@ -22,8 +22,8 @@ typedef struct motor
 };
 typedef struct motor Motor;
 
-Motor leftMotor = { 255, 240, 120 }; // Motor nomeMotor = { velocidade, velocidadeMaxima, velocidadeMinima }
-Motor rightMotor = { 255, 255, 130 };
+Motor leftMotor = { 150, 240, 120 }; // Motor nomeMotor = { velocidade, velocidadeMaxima, velocidadeMinima }
+Motor rightMotor = { 150, 255, 130 };
 
 
 //Encoder
@@ -109,18 +109,35 @@ void loop()
   {
     int rpmR = (countR * 3/2);
     int rpmL = (countL * 3/2);
-    
-    if( rpmR > rpmL )
-    {
-      rightMotor.vel = rightMotor.vel - ( rpmR - rpL )/2;
-      leftMotor.vel = leftMotor.vel + ( rpmR - rpL )/2;
-    }
+    Serial.print("rpmR: ");
+    Serial.println(rpmR);
+    Serial.print("rpmL: ");
+    Serial.println(rpmL);
     
     if( rpmR < rpmL )
     {
-      rightMotor.vel = rightMotor.vel + ( rpmR - rpL )/2;
-      leftMotor.vel = leftMotor.vel - ( rpmR - rpL )/2;     
+      rightMotor.vel = rightMotor.vel + 5;
     }
+    
+    if( rpmR > rpmL )
+    {
+      leftMotor.vel = leftMotor.vel + 5;
+    }
+    
+    if( rightMotor.vel > 255 )
+    {
+      rightMotor.vel = 255;
+      leftMotor.vel -= 1;
+    }
+    if( leftMotor.vel > 255 )
+    {
+      leftMotor.vel = 255;
+      rightMotor.vel -= 1;
+    }
+    Serial.print("motorR: ");
+    Serial.println(rightMotor.vel);
+    Serial.print("motorL: ");
+    Serial.println(leftMotor.vel);
     
     countR = 0;
     countL = 0;
@@ -128,6 +145,8 @@ void loop()
   }
   
   analogWrite( MOTOR_R, rightMotor.vel );
+  analogWrite( 9, 0 );
   analogWrite( MOTOR_L, leftMotor.vel );
+  analogWrite( 11, 0 );
 }
 
