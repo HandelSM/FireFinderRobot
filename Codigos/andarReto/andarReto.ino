@@ -1,18 +1,8 @@
-//HCSR04
-#include <Ultrasonic.h>
-#define TRIGGER_PIN 12
-#define ECHO_PIN    13
-#define ACCURACY    100 // Quanto maior acurracy, maior precisão porem menor velocidade de atualização da posição
-
-float samples[ACCURACY];
-int index = 0; // Indice do sample
-boolean wasSensor = false;
-
-Ultrasonic ultrasonic( TRIGGER_PIN, ECHO_PIN );
-
 //Motor
-#define MOTOR_L  8
-#define MOTOR_R  10
+#define MOTOR_L1  8
+#define MOTOR_L2  9
+#define MOTOR_R1  10
+#define MOTOR_R2  11
 
 typedef struct motor
 {
@@ -22,9 +12,8 @@ typedef struct motor
 };
 typedef struct motor Motor;
 
-Motor leftMotor = { 150, 240, 120 }; // Motor nomeMotor = { velocidade, velocidadeMaxima, velocidadeMinima }
-Motor rightMotor = { 150, 255, 130 };
-
+Motor leftMotor = { 155, 255, 120 }; // Motor nomeMotor = { velocidade, velocidadeMaxima, velocidadeMinima }
+Motor rightMotor = { 155, 255, 130 };
 
 //Encoder
 #define ENCODERR_PIN 2
@@ -32,96 +21,68 @@ Motor rightMotor = { 150, 255, 130 };
 
 int countR = 0;
 int countL = 0;
-int currentE1 = LOW;
-int lastE1 = LOW;
-int currentE2 = LOW;
-int lastE2 = LOW;
-boolean wasEncoder = false;
+int currentEncoderR = LOW;
+int lastEncoderR = LOW;
+int currentEncoderL = LOW;
+int lastEncoderL = LOW;
+boolean wasUpdateVel = false;
 
-//
-
-int distance()
+void encoder()
 {
-  float cmFromWall;
-  long microsec = ultrasonic.timing();
-  cmFromWall = ultrasonic.convert(microsec, Ultrasonic::CM);
+  currentEncoderR = digitalRead( ENCODERR_PIN );
+  currentEncoderL = digitalRead( ENCODERL_PIN );
   
-  float sum = 0;
+  if ( currentEncoderR != lastEncoderR )
+  {
+    countR++;
+  }
+  lastEncoderR = currentEncoderR;
   
-  if( wasSensor )
+  if ( currentEncoderL != lastEncoderL )
   {
-    samples[ index%ACCURACY ] = cmFromWall;
-    index++;
+    countL++;
   }
-  else
-  {
-    for( int i = 0; i < ACCURACY; i++ )
-    {
-      samples[i] = cmFromWall;
-    }
-    wasSensor = true;
-  }
-  for( int i = 0; i < ACCURACY; i++ )
-  {
-     sum += samples[ i ];
-  }
-  
-  return (int) (sum/ACCURACY);
+  lastEncoderL = currentEncoderL;
 }
 
 void setup ()
 {
   pinMode( ENCODERR_PIN, INPUT );
   pinMode( ENCODERL_PIN, INPUT );
-  pinMode( TRIGGER_PIN, OUTPUT );
-  pinMode( ECHO_PIN, INPUT );
-  pinMode( MOTOR_R, OUTPUT );
-  pinMode( MOTOR_L, OUTPUT );
+  pinMode( MOTOR_R1, OUTPUT );
+  pinMode( MOTOR_L1, OUTPUT );
+  pinMode( MOTOR_R2, OUTPUT );
+  pinMode( MOTOR_L2, OUTPUT );
   Serial.begin(9600);
 }
 
 void loop()
-{
-  currentE1 = digitalRead( ENCODERR_PIN );
-  currentE2 = digitalRead( ENCODERL_PIN );
-  
-  if ( currentE1 != lastE1 )
-  {
-    countR++;
-  }
-  
-  if ( currentE2 != lastE2 )
-  {
-    countL++;
-  }
-  
-  lastE1 = currentE1;
-  lastE2 = currentE2;
+{  
+  encoder();
   
   int time = millis();
   
   if( time % 1000 == 0 )
   {
-    wasEncoder = false;
+    wasUpdateVel = false;
   }
   
-  if ( time % 1001 == 0 && !wasEncoder )
+  if ( time % 1001 == 0 && !wasUpdateVel )
   {
-    int rpmR = (countR * 3/2);
-    int rpmL = (countL * 3/2);
-    Serial.print("rpmR: ");
-    Serial.println(rpmR);
-    Serial.print("rpmL: ");
-    Serial.println(rpmL);
     
-    if( rpmR < rpmL )
+    Serial.print("countL: ");
+    Serial.println(countL);
+    Serial.print("countR: ");
+    Serial.println(countR);
+    
+    if( countR < countL )
     {
-      rightMotor.vel = rightMotor.vel + 5;
+      rightMotor.vel += (countL - countR)/2;
     }
     
-    if( rpmR > rpmL )
+    if( countR > countL )
     {
-      leftMotor.vel = leftMotor.vel + 5;
+      leftMotor.vel += (countR - countL)/2;
     }
     
     if( rightMotor.vel > 255 )
@@ -141,12 +102,11 @@ void loop()
     
     countR = 0;
     countL = 0;
-    wasEncoder = true;
+    wasUpdateVel = true;
   }
   
-  analogWrite( MOTOR_R, rightMotor.vel );
-  analogWrite( 9, 0 );
-  analogWrite( MOTOR_L, leftMotor.vel );
-  analogWrite( 11, 0 );
+  analogWrite( MOTOR_R1, rightMotor.vel );
+  analogWrite( MOTOR_R2, 0 );
+  analogWrite( MOTOR_L1, leftMotor.vel );
+  analogWrite( MOTOR_L2, 0 );
 }
-

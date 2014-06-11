@@ -51,5 +51,6 @@ void loop()
 {
     Serial.print( "Distance: " );
     Serial.println( distance() );
+    delay(10);
 }
 
