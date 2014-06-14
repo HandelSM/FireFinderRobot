@@ -1,8 +1,3 @@
-/********************************************************
- * PID Basic Example
- * Reading analog input 0 to control analog PWM output 3
- ********************************************************/
-
 #include <PID_v1.h>
 
 int motorR[2] = { 8, 9 };
