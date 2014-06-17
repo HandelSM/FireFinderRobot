@@ -23,6 +23,8 @@ int lastEncoderLeft = LOW;
 void setup ()
 {
   //turn the PID on
+  OutputRight = 200;
+  OutputLeft = 200;
   leftPID.SetMode(AUTOMATIC);
   pinMode( encoderRPin, INPUT );
   pinMode( encoderLPin, INPUT );
@@ -37,15 +39,15 @@ void loop()
   if ( currentEncoderRight != lastEncoderRight )
   {
     countR++;
-    Serial.print("Count 1: ");
-    Serial.println( countR );
+//    Serial.print("Count 1: ");
+//    Serial.println( countR );
   }
   
   if ( currentEncoderLeft != lastEncoderLeft )
   {
     countL++;
-    Serial.print("Count 2: ");
-    Serial.println( countL );
+//    Serial.print("Count 2: ");
+//    Serial.println( countL );
   }
   lastEncoderRight = currentEncoderRight;
   lastEncoderLeft = currentEncoderLeft;
@@ -56,8 +58,10 @@ void loop()
   InputLeft = countL;
   InputRight = countR;
   leftPID.Compute();
+  OutputRight = 255;
+  Serial.println( OutputLeft );
   analogWrite( motorR[0], OutputRight );
   analogWrite( motorR[1], 0 );
   analogWrite( motorL[0], OutputLeft );
-  analogWrite( motorR[1], 0 );
+  analogWrite( motorL[1], 0 );
 }
