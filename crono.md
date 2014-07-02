@@ -24,8 +24,8 @@ Fazer o carrinho andar reto
 Fizemos um código para o carrinho andar reto, porém tem erros.
 - O que devemos fazer?
 Consertar o código do carrinho andar reto e tentar fazer um código de rodar o carrinho 90 graus.
-Semana 1:
 
+Semana 1:
 - O que deveríamos fazer?
 ///////////////////////////
 
