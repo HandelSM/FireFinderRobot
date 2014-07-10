@@ -1,7 +1,16 @@
 #CRONOGRAMA
 
+Semana 5:
+- O que deverï¿½amos fazer? 
+Fazer o carrinho andar reto.
+-  O que fizemos? 
+Iniciamos um cÃ³digo para fazer um motor rodar sempre na mesma velocidade ( se tentarmos para-lo ele faz mais forÃ§a ).
+Descobrimos que a ponte h estÃ¡ com defeito.
+- O que devemos fazer? 
+Fazer o carrinho andar reto.
+
 Semana 4:
-- O que deveríamos fazer? 
+- O que deverï¿½amos fazer? 
 Fazer o carrinho andar reto.
 -  O que fizemos? 
 Trocamos arduino e encoders pois apresentavam problemas. Compramos sensor de chama.
@@ -9,24 +18,24 @@ Trocamos arduino e encoders pois apresentavam problemas. Compramos sensor de cha
 Fazer o carrinho andar reto.
 
 Semana 3:
-- O que deveríamos fazer? 
-Consertar o código do carrinho andar reto e tentar fazer um código de rodar o carrinho 90 graus.
+- O que deverï¿½amos fazer? 
+Consertar o cï¿½digo do carrinho andar reto e tentar fazer um cï¿½digo de rodar o carrinho 90 graus.
 -  O que fizemos? 
-Melhoramos o chassi, compramos shiel de motor, enviamos e-mail para assistência técnica do arduino para descobrir o problema dele.
+Melhoramos o chassi, compramos shiel de motor, enviamos e-mail para assistï¿½ncia tï¿½cnica do arduino para descobrir o problema dele.
 - O que devemos fazer? 
 Fazer o carrinho andar reto.
 
 Semana 2:
-- O que deveríamos fazer?
+- O que deverï¿½amos fazer?
 Fazer o carrinho andar reto
 
 - O que fizemos?
-Fizemos um código para o carrinho andar reto, porém tem erros.
+Fizemos um cï¿½digo para o carrinho andar reto, porï¿½m tem erros.
 - O que devemos fazer?
-Consertar o código do carrinho andar reto e tentar fazer um código de rodar o carrinho 90 graus.
+Consertar o cï¿½digo do carrinho andar reto e tentar fazer um cï¿½digo de rodar o carrinho 90 graus.
 
 Semana 1:
-- O que deveríamos fazer?
+- O que deverï¿½amos fazer?
 ///////////////////////////
 
 - O que fizemos?
