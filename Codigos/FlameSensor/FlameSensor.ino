@@ -5,7 +5,7 @@ void setup()
 }
 void loop()
 {
-      FlameSensor=analogRead(5); 
+      FlameSensor=analogRead(A0);
       Serial.println("EH FOGO MANEH");
       Serial.println(FlameSensor);    
       delay(100);
