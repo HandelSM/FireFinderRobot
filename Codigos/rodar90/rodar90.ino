@@ -16,7 +16,7 @@ void encoder()
     countR++;
     Serial.print("Count R: ");
     Serial.println( countR );
-    Serial.println( i );
+    //Serial.println( i );
   }
   
   lastEncoderRight = currentEncoderRight;
@@ -25,12 +25,12 @@ void encoder()
 void setup ()
 { 
   pinMode( encoderRPin, INPUT );
-  pinMode( encoderLPin, INPUT );
+  //pinMode( encoderLPin, INPUT );
   
   pinMode( motorR[0], OUTPUT );
   pinMode( motorR[1], OUTPUT );
-  pinMode( motorL[0], OUTPUT );
-  pinMode( motorL[1], OUTPUT );
+//  pinMode( motorL[0], OUTPUT );
+//  pinMode( motorL[1], OUTPUT );
   
   Serial.begin(9600);
 }
@@ -39,7 +39,7 @@ void loop()
 {
   encoder();
   
-  if( countR < 40 )
+  if( countR < 18 )
   {
     analogWrite( motorR[0], 255 );
     analogWrite( motorR[1], 0 ); 
@@ -49,6 +49,8 @@ void loop()
   {
     analogWrite( motorR[0], 0 );
     analogWrite( motorR[1], 0 );
+    delay(3000);
+    countR = 0;
   }
 }
 
