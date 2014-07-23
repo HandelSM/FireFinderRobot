@@ -1,20 +1,25 @@
-#include <Ultrasonic.h>
-#include <PID_v1.h>
+//HCSR04 lib and pins
+#include <NewPing.h>
 
 #define TRIGGER_PIN  12
 #define ECHO_PIN     13
+#define MAX_DISTANCE 150
 
+NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
+
+#include <PID_v1.h>
+
+//Motor pins
 int motorR[2] = { 5, 6 };
 int motorL[2] = { 9, 10 };
-
-Ultrasonic ultrasonic( TRIGGER_PIN, ECHO_PIN );
 
 double SetpointRight, InputRight, OutputRight;
 double SetpointLeft, InputLeft, OutputLeft;
 
-PID rightPID(&InputRight, &OutputRight, &SetpointRight, 2, 5, 0, DIRECT);
-PID leftPID(&InputLeft, &OutputLeft, &SetpointLeft, 2, 5, 0, DIRECT);
+PID rightPID(&InputRight, &OutputRight, &SetpointRight, 1, 15, 0, DIRECT);
+PID leftPID(&InputLeft, &OutputLeft, &SetpointLeft, 1, 15, 0, DIRECT);
 
+//Encoder
 int encoderRPin = 2;
 int encoderLPin = 3;
 int countR = 0;
@@ -25,21 +30,12 @@ int currentEncoderRight = LOW;
 int lastEncoderRight = LOW;
 int currentEncoderLeft = LOW;
 int lastEncoderLeft = LOW;
-boolean wasUpdateRpm = false;
-boolean turn = false;
 
-float gap = 0; // Variavel que guarda a distancia
-
-float distance()
-{
-  float cmFromWall;
-  long microsec = ultrasonic.timing();
-  cmFromWall = ultrasonic.convert(microsec, Ultrasonic::CM);
-  return cmFromWall;
-}
+unsigned long old = 0;
 
 void encoder()
 {
+  //delay(5);
   currentEncoderRight = digitalRead( encoderRPin );
   currentEncoderLeft = digitalRead( encoderLPin );
   
@@ -60,121 +56,94 @@ void encoder()
   lastEncoderLeft = currentEncoderLeft;
 }
 
-void setup ()
-{  
-  SetpointRight = 30;
-  SetpointLeft = 30;
+float distance()
+{
+  delay(30);                      // Wait 50ms between pings (about 20 pings/sec). 29ms should be the shortest delay between pings.
+  unsigned int uS = sonar.ping(); // Send ping, get ping time in microseconds (uS).
+  //Serial.print("Ping: ");
+  float cmFromWall = uS / US_ROUNDTRIP_CM; // Convert ping time to distance in cm and print result (0 = outside set distance range)
+  return cmFromWall;
+}
+
+void moveFoward()
+{
+  encoder();
   
+  unsigned long now = millis();
+  
+  if( now - old >= 1000 )
+  {    
+    rpmR = countR;
+    rpmL = countL;
+    
+    Serial.print( "rpmR : " );
+    Serial.println( rpmR );
+    Serial.print( "rpmL : " );
+    Serial.println( rpmL );
+    
+    countR = 0;
+    countL = 0;
+    
+    Serial.println( OutputRight );
+    Serial.println( OutputLeft );
+    
+    old = now;
+  }
+  
+  InputRight = rpmR;
+  InputLeft = rpmL;
+  
+  rightPID.Compute();
+  leftPID.Compute();
+  
+  analogWrite( motorR[0], OutputRight );
+  analogWrite( motorR[1], 0 );
+  analogWrite( motorL[0], OutputLeft );
+  analogWrite( motorL[1], 0 );
+}
+
+void setup()
+{
+  //PID
+  SetpointRight = 20;
+  SetpointLeft = 20;
   rightPID.SetMode(AUTOMATIC);
   leftPID.SetMode(AUTOMATIC);
   
-  pinMode( TRIGGER_PIN, OUTPUT );
-  pinMode( ECHO_PIN, INPUT );
-  
+  //Encoder
   pinMode( encoderRPin, INPUT );
   pinMode( encoderLPin, INPUT );
   
+  //Hc Sr04
+  pinMode( TRIGGER_PIN, OUTPUT );
+  pinMode( ECHO_PIN, INPUT );
+  
+  //Motor
   pinMode( motorR[0], OUTPUT );
   pinMode( motorR[1], OUTPUT );
   pinMode( motorL[0], OUTPUT );
   pinMode( motorL[1], OUTPUT );
- 
-  gap = distance();
-   
+  
   Serial.begin(9600);
 }
 
-void loop()
-{ 
-  gap = 666;
+void loop()  
+{  
+  float gap = distance();
   
-  if( gap > 15 && turn == false )
+  //Serial.println( gap );
+  
+  if( gap > 20 || gap == 0 )
   {
-    gap = distance();
-  
-    //Serial.println( gap );
-    
-    encoder();
-    
-    int time = millis();
-    
-    if( time % 500 == 0 )
-    {
-      wasUpdateRpm = false;
-      Serial.println("entrou");
-    }
-    
-    if( time % 501 == 0 && !wasUpdateRpm )
-    {
-      Serial.println("entrou");
-      
-      rpmR = countR;
-      rpmL = countL;
-      
-      Serial.print( "rpmR : " );
-      Serial.println( rpmR );
-      Serial.print( "rpmL : " );
-      Serial.println( rpmL );
-      
-      countR = 0;
-      countL = 0;
-      
-      Serial.println( OutputRight );
-      Serial.println( OutputLeft );
-      
-      wasUpdateRpm = true;
-    }
-    
-    InputRight = rpmR;
-    InputLeft = rpmL;
-    
-    rightPID.Compute();
-    leftPID.Compute();
-      
-    analogWrite( motorR[0], OutputRight );
-    analogWrite( motorR[1], 0 );
-    analogWrite( motorL[0], OutputLeft );
-    analogWrite( motorL[1], 0 );
+    moveFoward();
   }
-  
   else
   {
-    if( turn == false )
-    {
-      countR = 0;
-      countL = 0;
-      
-      analogWrite( motorR[0], 0 );
-      analogWrite( motorR[1], 0 );
-      analogWrite( motorL[0], 0 );
-      analogWrite( motorL[1], 0 );
-      
-      turn = true;
-    }
+    analogWrite( motorR[0], 0 );
+    analogWrite( motorR[1], 250 );
+    analogWrite( motorL[0], 250 );
+    analogWrite( motorL[1], 0 );   
     
-    encoder();
-    
-    if( countL < 20 )
-    {
-      Serial.println( "Entrou if" );
-      analogWrite( motorR[0], 0 );
-      analogWrite( motorR[1], 0 );
-      analogWrite( motorL[0], 255 );
-      analogWrite( motorL[1], 0 );
-    }
-    
-    else
-    {
-      analogWrite( motorR[0], 0 );
-      analogWrite( motorR[1], 0 );
-      analogWrite( motorL[0], 0 );
-      analogWrite( motorL[1], 0 );
-      
-      Serial.println( "Entrou else" );
-      delay( 3000 );
-      turn = false; 
-    }
+    old = millis();
   }
-  
-  //delay(10);
 }
