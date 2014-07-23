@@ -6,8 +6,8 @@ int motorL[2] = { 9, 10 };
 double SetpointRight, InputRight, OutputRight;
 double SetpointLeft, InputLeft, OutputLeft;
 
-PID rightPID(&InputRight, &OutputRight, &SetpointRight, 0.1, 3, 0, DIRECT);
-PID leftPID(&InputLeft, &OutputLeft, &SetpointLeft, 0.1, 3, 0, DIRECT);
+PID rightPID(&InputRight, &OutputRight, &SetpointRight, 2, 5, 0, DIRECT);
+PID leftPID(&InputLeft, &OutputLeft, &SetpointLeft, 2, 5, 0, DIRECT);
 
 int encoderRPin = 2;
 int encoderLPin = 3;
@@ -45,8 +45,8 @@ void encoder()
 
 void setup ()
 {
-  SetpointRight = 40;
-  SetpointLeft = 40;
+  SetpointRight = 30;
+  SetpointLeft = 30;
   
   rightPID.SetMode(AUTOMATIC);
   leftPID.SetMode(AUTOMATIC);
