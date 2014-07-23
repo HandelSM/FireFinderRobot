@@ -12,8 +12,8 @@ Ultrasonic ultrasonic( TRIGGER_PIN, ECHO_PIN );
 double SetpointRight, InputRight, OutputRight;
 double SetpointLeft, InputLeft, OutputLeft;
 
-PID rightPID(&InputRight, &OutputRight, &SetpointRight, 0.1, 3, 0, DIRECT);
-PID leftPID(&InputLeft, &OutputLeft, &SetpointLeft, 0.1, 3, 0, DIRECT);
+PID rightPID(&InputRight, &OutputRight, &SetpointRight, 2, 5, 0, DIRECT);
+PID leftPID(&InputLeft, &OutputLeft, &SetpointLeft, 2, 5, 0, DIRECT);
 
 int encoderRPin = 2;
 int encoderLPin = 3;
@@ -28,11 +28,13 @@ int lastEncoderLeft = LOW;
 boolean wasUpdateRpm = false;
 boolean turn = false;
 
+float gap = 0; // Variavel que guarda a distancia
+
 float distance()
 {
   float cmFromWall;
   long microsec = ultrasonic.timing();
-  cmFromWall = ultrasonic.convert( microsec, Ultrasonic::CM );
+  cmFromWall = ultrasonic.convert(microsec, Ultrasonic::CM);
   return cmFromWall;
 }
 
@@ -59,9 +61,9 @@ void encoder()
 }
 
 void setup ()
-{
-  SetpointRight = 40;
-  SetpointLeft = 40;
+{  
+  SetpointRight = 30;
+  SetpointLeft = 30;
   
   rightPID.SetMode(AUTOMATIC);
   leftPID.SetMode(AUTOMATIC);
@@ -76,14 +78,22 @@ void setup ()
   pinMode( motorR[1], OUTPUT );
   pinMode( motorL[0], OUTPUT );
   pinMode( motorL[1], OUTPUT );
-  
+ 
+  gap = distance();
+   
   Serial.begin(9600);
 }
 
 void loop()
-{
-  if( distance() > 10 && turn == false )
+{ 
+  gap = 666;
+  
+  if( gap > 15 && turn == false )
   {
+    gap = distance();
+  
+    //Serial.println( gap );
+    
     encoder();
     
     int time = millis();
@@ -91,10 +101,13 @@ void loop()
     if( time % 500 == 0 )
     {
       wasUpdateRpm = false;
+      Serial.println("entrou");
     }
     
     if( time % 501 == 0 && !wasUpdateRpm )
-    {    
+    {
+      Serial.println("entrou");
+      
       rpmR = countR;
       rpmL = countL;
       
@@ -117,7 +130,7 @@ void loop()
     
     rightPID.Compute();
     leftPID.Compute();
-    
+      
     analogWrite( motorR[0], OutputRight );
     analogWrite( motorR[1], 0 );
     analogWrite( motorL[0], OutputLeft );
@@ -141,8 +154,9 @@ void loop()
     
     encoder();
     
-    if( countL < 40 )
+    if( countL < 20 )
     {
+      Serial.println( "Entrou if" );
       analogWrite( motorR[0], 0 );
       analogWrite( motorR[1], 0 );
       analogWrite( motorL[0], 255 );
@@ -151,7 +165,16 @@ void loop()
     
     else
     {
+      analogWrite( motorR[0], 0 );
+      analogWrite( motorR[1], 0 );
+      analogWrite( motorL[0], 0 );
+      analogWrite( motorL[1], 0 );
+      
+      Serial.println( "Entrou else" );
+      delay( 3000 );
       turn = false; 
     }
   }
+  
+  //delay(10);
 }
