@@ -19,10 +19,12 @@ int currentEncoderRight = LOW;
 int lastEncoderRight = LOW;
 int currentEncoderLeft = LOW;
 int lastEncoderLeft = LOW;
-boolean wasUpdateRpm = false;
+
+unsigned long old = 0;
 
 void encoder()
 {
+  //delay(5);
   currentEncoderRight = digitalRead( encoderRPin );
   currentEncoderLeft = digitalRead( encoderLPin );
   
@@ -45,8 +47,8 @@ void encoder()
 
 void setup ()
 {
-  SetpointRight = 30;
-  SetpointLeft = 30;
+  SetpointRight = 40;
+  SetpointLeft = 40;
   
   rightPID.SetMode(AUTOMATIC);
   leftPID.SetMode(AUTOMATIC);
@@ -66,14 +68,9 @@ void loop()
 {
   encoder();
   
-  int time = millis();
+  unsigned long now = millis();
   
-  if( time % 500 == 0 )
-  {
-    wasUpdateRpm = false;
-  }
-  
-  if( time % 501 == 0 && !wasUpdateRpm )
+  if( now - old >= 500 )
   {    
     rpmR = countR;
     rpmL = countL;
@@ -90,6 +87,8 @@ void loop()
     Serial.println( OutputLeft );
     
     wasUpdateRpm = true;
+    
+    old = now;
   }
   
   InputRight = rpmR;
