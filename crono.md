@@ -1,5 +1,16 @@
 #CRONOGRAMA
 
+Semana 7:
+- O que dever�amos fazer? 
+Código para o carrinho rodar 90º e testar o código do sensor de chama, se estiver errado consertar.
+
+-  O que fizemos? 
+Fizemos o carrinho andar 90°, acertamos o código de chama, iniciamos o código de andar em um quadrado fechado, power point para a apresentação 
+e mudamos a alimentação do arduino para uma bateria 9V.
+
+- O que devemos fazer? 
+Fazer o carrinho andar em um quadrado fechado desviando das paredes girando 90°.
+
 Semana 6:
 - O que dever�amos fazer? 
 Fazer o carrinho andar reto.
