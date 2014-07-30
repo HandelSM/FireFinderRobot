@@ -19,6 +19,8 @@ double SetpointLeft, InputLeft, OutputLeft;
 PID rightPID(&InputRight, &OutputRight, &SetpointRight, 2, 6, 0, DIRECT);
 PID leftPID(&InputLeft, &OutputLeft, &SetpointLeft, 2, 6, 0, DIRECT);
 
+boolean turn = false;
+
 //Encoder
 int encoderRPin = 2;
 int encoderLPin = 3;
@@ -41,6 +43,15 @@ float gap = 0;
 boolean FOGO = false;
 
 #define BUZZER_PIN 11
+
+void beep(unsigned char delayms)
+{
+  analogWrite( BUZZER_PIN, 255 );      // Almost any value can be used except 0 and 255
+                           // experiment to get the best tone
+  delay(delayms);          // wait for a delayms ms
+  analogWrite( BUZZER_PIN, 0 );       // 0 turns it off
+  delay(delayms);          // wait for a delayms ms   
+}
 
 void encoder()
 {
@@ -75,20 +86,18 @@ float distance()
 }
 
 void moveFoward()
-{
+{  
   encoder();
-  
-  //unsigned long now = millis();
   
   if( now - old >= 500 )
   {    
     rpmR = countR;
     rpmL = countL;
     
-    Serial.print( "rpmR : " );
-    Serial.println( rpmR );
-    Serial.print( "rpmL : " );
-    Serial.println( rpmL );
+//    Serial.print( "rpmR : " );
+//    Serial.println( rpmR );
+//    Serial.print( "rpmL : " );
+//    Serial.println( rpmL );
     
     countR = 0;
     countL = 0;
@@ -111,13 +120,35 @@ void moveFoward()
   analogWrite( motorL[1], 0 );
 }
 
-void beep(unsigned char delayms)
+void moveRight()
 {
-  analogWrite( BUZZER_PIN, 255 );      // Almost any value can be used except 0 and 255
-                           // experiment to get the best tone
-  delay(delayms);          // wait for a delayms ms
-  analogWrite( BUZZER_PIN, 0 );       // 0 turns it off
-  delay(delayms);          // wait for a delayms ms   
+  encoder();
+  
+  //Serial.print( "countR : " );
+  //Serial.println( countR );
+  Serial.print( "countL : " );
+  Serial.println( countL );
+  
+  if( countL < 20 )
+  {
+    float strong = 1.3;
+    analogWrite( motorR[0], 0 );
+    analogWrite( motorR[1], 255);//OutputRight * strong);
+    analogWrite( motorL[0], 255);//OutputLeft * strong);
+    analogWrite( motorL[1], 0 );
+  }
+  else
+  {
+    analogWrite( motorR[0], 0 );
+    analogWrite( motorR[1], 0 );
+    analogWrite( motorL[0], 0 );
+    analogWrite( motorL[1], 0 );
+    delay(1000);
+    old = millis();
+    turn = false;
+    countL = 0;
+    countR = 0;
+  }
 }
 
 void setup()
@@ -156,44 +187,44 @@ void loop()
 {  
   int flameSensor = analogRead(A0);
   
-  now = millis();
-  
-  if( now - oldHcsr04 >= 30 )
-  {
-    gap = distance();
-    
-    oldHcsr04 = now;
-  }
-  
   if( flameSensor > 100 || FOGO == true )
   {
     beep( 200 );
     analogWrite( motorR[0], 0 );
     analogWrite( motorR[1], 0 );
     analogWrite( motorL[0], 0 );
-    analogWrite( motorL[1], 0 );   
+    analogWrite( motorL[1], 0 ); 
     
     FOGO = true;
   }
+  
   else
   {
-    float gap = distance();
-    //float gap = 40;
+    now = millis();
+  
+    if( now - oldHcsr04 >= 50 )
+    {
+      gap = distance();
+      
+      oldHcsr04 = now;
+    }
     
-    //Serial.println( gap );
+    Serial.println( gap );
     
-    if( gap > 20 || gap == 0 )
+    if( (gap > 20 || gap == 0) && (turn == false) )
     {
       moveFoward();
     }
+    
     else
     {
-      analogWrite( motorR[0], 0 );
-      analogWrite( motorR[1], 250 );
-      analogWrite( motorL[0], 250 );
-      analogWrite( motorL[1], 0 );
-      
-      old = millis();
+      if( turn == false )
+      {
+        countR = 0;
+        countL = 0;
+        turn = true;
+      }
+      moveRight();
     }
   }
 }
