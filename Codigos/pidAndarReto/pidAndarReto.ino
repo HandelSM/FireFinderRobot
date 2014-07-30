@@ -6,8 +6,8 @@ int motorL[2] = { 9, 10 };
 double SetpointRight, InputRight, OutputRight;
 double SetpointLeft, InputLeft, OutputLeft;
 
-PID rightPID(&InputRight, &OutputRight, &SetpointRight, 2, 5, 0, DIRECT);
-PID leftPID(&InputLeft, &OutputLeft, &SetpointLeft, 2, 5, 0, DIRECT);
+PID rightPID(&InputRight, &OutputRight, &SetpointRight, 2, 7, 0, DIRECT);
+PID leftPID(&InputLeft, &OutputLeft, &SetpointLeft, 2, 7, 0, DIRECT);
 
 int encoderRPin = 2;
 int encoderLPin = 3;
@@ -86,7 +86,7 @@ void loop()
     Serial.println( OutputRight );
     Serial.println( OutputLeft );
     
-    wasUpdateRpm = true;
+    //wasUpdateRpm = true;
     
     old = now;
   }
