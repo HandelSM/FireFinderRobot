@@ -16,8 +16,8 @@ int motorL[2] = { 9, 10 };
 double SetpointRight, InputRight, OutputRight;
 double SetpointLeft, InputLeft, OutputLeft;
 
-PID rightPID(&InputRight, &OutputRight, &SetpointRight, 1, 15, 0, DIRECT);
-PID leftPID(&InputLeft, &OutputLeft, &SetpointLeft, 1, 15, 0, DIRECT);
+PID rightPID(&InputRight, &OutputRight, &SetpointRight, 2, 6, 0, DIRECT);
+PID leftPID(&InputLeft, &OutputLeft, &SetpointLeft, 2, 6, 0, DIRECT);
 
 //Encoder
 int encoderRPin = 2;
@@ -31,7 +31,16 @@ int lastEncoderRight = LOW;
 int currentEncoderLeft = LOW;
 int lastEncoderLeft = LOW;
 
+unsigned long now = 0;
+
 unsigned long old = 0;
+unsigned long oldHcsr04 = 0;
+
+float gap = 0;
+
+boolean FOGO = false;
+
+#define BUZZER_PIN 11
 
 void encoder()
 {
@@ -58,7 +67,7 @@ void encoder()
 
 float distance()
 {
-  delay(30);                      // Wait 50ms between pings (about 20 pings/sec). 29ms should be the shortest delay between pings.
+  //delay(30);                      // Wait 50ms between pings (about 20 pings/sec). 29ms should be the shortest delay between pings.
   unsigned int uS = sonar.ping(); // Send ping, get ping time in microseconds (uS).
   //Serial.print("Ping: ");
   float cmFromWall = uS / US_ROUNDTRIP_CM; // Convert ping time to distance in cm and print result (0 = outside set distance range)
@@ -69,9 +78,9 @@ void moveFoward()
 {
   encoder();
   
-  unsigned long now = millis();
+  //unsigned long now = millis();
   
-  if( now - old >= 1000 )
+  if( now - old >= 500 )
   {    
     rpmR = countR;
     rpmL = countL;
@@ -102,11 +111,24 @@ void moveFoward()
   analogWrite( motorL[1], 0 );
 }
 
+void beep(unsigned char delayms)
+{
+  analogWrite( BUZZER_PIN, 255 );      // Almost any value can be used except 0 and 255
+                           // experiment to get the best tone
+  delay(delayms);          // wait for a delayms ms
+  analogWrite( BUZZER_PIN, 0 );       // 0 turns it off
+  delay(delayms);          // wait for a delayms ms   
+}
+
 void setup()
 {
+  beep(50);
+  beep(50);
+  beep(50);  
+  
   //PID
-  SetpointRight = 20;
-  SetpointLeft = 20;
+  SetpointRight = 40;
+  SetpointLeft = 40;
   rightPID.SetMode(AUTOMATIC);
   leftPID.SetMode(AUTOMATIC);
   
@@ -124,26 +146,54 @@ void setup()
   pinMode( motorL[0], OUTPUT );
   pinMode( motorL[1], OUTPUT );
   
+  //Buzzer
+  pinMode( BUZZER_PIN, OUTPUT );
+  
   Serial.begin(9600);
 }
 
-void loop()  
+void loop()
 {  
-  float gap = distance();
+  int flameSensor = analogRead(A0);
   
-  //Serial.println( gap );
+  now = millis();
   
-  if( gap > 20 || gap == 0 )
+  if( now - oldHcsr04 >= 30 )
   {
-    moveFoward();
+    gap = distance();
+    
+    oldHcsr04 = now;
+  }
+  
+  if( flameSensor > 100 || FOGO == true )
+  {
+    beep( 200 );
+    analogWrite( motorR[0], 0 );
+    analogWrite( motorR[1], 0 );
+    analogWrite( motorL[0], 0 );
+    analogWrite( motorL[1], 0 );   
+    
+    FOGO = true;
   }
   else
   {
-    analogWrite( motorR[0], 0 );
-    analogWrite( motorR[1], 250 );
-    analogWrite( motorL[0], 250 );
-    analogWrite( motorL[1], 0 );   
+    float gap = distance();
+    //float gap = 40;
     
-    old = millis();
+    //Serial.println( gap );
+    
+    if( gap > 20 || gap == 0 )
+    {
+      moveFoward();
+    }
+    else
+    {
+      analogWrite( motorR[0], 0 );
+      analogWrite( motorR[1], 250 );
+      analogWrite( motorL[0], 250 );
+      analogWrite( motorL[1], 0 );
+      
+      old = millis();
+    }
   }
 }
