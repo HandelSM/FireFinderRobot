@@ -1,5 +1,17 @@
 #CRONOGRAMA
 
+Semana 8:
+- O que dever�amos fazer? 
+Fazer o carrinho andar em um quadrado fechado desviando das paredes girando 90°.
+
+-  O que fizemos?
+Tentamos fazer o carrinho andar em um quadrado fechado desviando das paredes e girando 90°,
+mas não conseguimos fazer com que o arduino leia todos os sensores com o PID de andar reto.
+Fizemos o carrinho desviar das paredes e apitar quando achar fogo.
+
+- O que devemos fazer? 
+Descobrir como iremos fazer o arduino ler todos os sensores ao mesmo tempo sem perder leitura.
+
 Semana 7:
 - O que dever�amos fazer? 
 Código para o carrinho rodar 90º e testar o código do sensor de chama, se estiver errado consertar.
