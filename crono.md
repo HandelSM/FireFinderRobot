@@ -1,5 +1,15 @@
 #CRONOGRAMA
 
+Semana 9:
+- O que dever�amos fazer? 
+Descobrir como iremos fazer o arduino ler todos os sensores ao mesmo tempo sem perder leitura.
+
+-  O que fizemos?
+Mudamos a forma de ler o sensor de distância, agora ele não da um delay mas somente lê algo em um periodo tem tempo determinado. Dessa forma o arduino não perde leituras.
+
+- O que devemos fazer? 
+Fazer o carrinho andar de forma eficiente em um quadrado.
+
 Semana 8:
 - O que dever�amos fazer? 
 Fazer o carrinho andar em um quadrado fechado desviando das paredes girando 90°.
