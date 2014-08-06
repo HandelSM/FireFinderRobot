@@ -63,7 +63,7 @@ void encoder()
   {
     countR++;
 //    Serial.print("Count R: ");
-//    Serial.println( countR );
+    Serial.println( countR );
   }
   
   if ( currentEncoderLeft != lastEncoderLeft )
@@ -102,8 +102,8 @@ void moveFoward()
     countR = 0;
     countL = 0;
     
-    Serial.println( OutputRight );
-    Serial.println( OutputLeft );
+    //Serial.println( OutputRight );
+    //Serial.println( OutputLeft );
     
     old = now;
   }
@@ -121,34 +121,53 @@ void moveFoward()
 }
 
 void moveRight()
-{
-  encoder();
+{  
+//  //Serial.print( "countR : " );
+//  //Serial.println( countR );
+//  Serial.print( "countL : " );
+//  Serial.println( countL );
+
+//  delay( 1000 );
+//  
+//  analogWrite( motorR[0], 0 );
+//  analogWrite( motorR[1], 0 );
+//  analogWrite( motorL[0], 0 );
+//  analogWrite( motorL[1], 0 );
+//  delay(1000);
+//  old = millis();
+//  turn = false;
+//  countL = 40;
+//  countR = 40;
+//  analogWrite( motorR[0], OutputRight );
+//  analogWrite( motorR[1], 0 );
+//  analogWrite( motorL[0], OutputLeft );
+//  analogWrite( motorL[1], 0 );
+
+  analogWrite( motorR[0], 0 );
+  analogWrite( motorR[1], 255 );//OutputRight * strong);
+  analogWrite( motorL[0], 255 );//OutputLeft * strong);
+  analogWrite( motorL[1], 0 );
   
-  //Serial.print( "countR : " );
-  //Serial.println( countR );
-  Serial.print( "countL : " );
-  Serial.println( countL );
+  delay( 300 );
   
-  if( countL < 20 )
-  {
-    float strong = 1.3;
-    analogWrite( motorR[0], 0 );
-    analogWrite( motorR[1], 255);//OutputRight * strong);
-    analogWrite( motorL[0], 255);//OutputLeft * strong);
-    analogWrite( motorL[1], 0 );
-  }
-  else
-  {
-    analogWrite( motorR[0], 0 );
-    analogWrite( motorR[1], 0 );
-    analogWrite( motorL[0], 0 );
-    analogWrite( motorL[1], 0 );
-    delay(1000);
-    old = millis();
-    turn = false;
-    countL = 0;
-    countR = 0;
-  }
+  analogWrite( motorR[0], 0 );
+  analogWrite( motorR[1], 0 );
+  analogWrite( motorL[0], 0 );
+  analogWrite( motorL[1], 0 );
+  
+  delay( 1000 );
+  
+  countL = 0;
+  countR = 0;
+  
+  analogWrite( motorR[0], OutputRight );
+  analogWrite( motorR[1], 0 );
+  analogWrite( motorL[0], OutputLeft );
+  analogWrite( motorL[1], 0 );
+  
+  turn = false;
+  
+  old = millis();
 }
 
 void setup()
@@ -209,7 +228,7 @@ void loop()
       oldHcsr04 = now;
     }
     
-    Serial.println( gap );
+    //Serial.println( gap );
     
     if( (gap > 20 || gap == 0) && (turn == false) )
     {
