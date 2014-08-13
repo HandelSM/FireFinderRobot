@@ -1,5 +1,15 @@
 #CRONOGRAMA
 
+Semana 10:
+- O que dever�amos fazer? 
+Fazer o carrinho andar de forma eficiente em um quadrado.
+
+-  O que fizemos?
+Compramos a bateria LiPo e mudamos a forma de girar.
+
+- O que devemos fazer? 
+Fazer o carrinho andar de forma eficiente em um quadrado.
+
 Semana 9:
 - O que dever�amos fazer? 
 Descobrir como iremos fazer o arduino ler todos os sensores ao mesmo tempo sem perder leitura.
