@@ -8,7 +8,7 @@ Fazer o carrinho andar de forma eficiente em um quadrado.
 Compramos a bateria LiPo e mudamos a forma de girar.
 
 - O que devemos fazer? 
-Fazer o carrinho andar de forma eficiente em um quadrado.
+Trabalhar na mecânica do carrinho. (Fazer um andar)
 
 Semana 9:
 - O que dever�amos fazer? 
