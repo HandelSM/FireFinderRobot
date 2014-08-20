@@ -1,5 +1,16 @@
 #CRONOGRAMA
 
+Semana 11:
+- O que dever�amos fazer? 
+Trabalhar na mecânica do carrinho. (Fazer um andar)
+
+-  O que fizemos?
+Aprendemos a usar o shield de motor, fizemos um conector para ser em paralelo a corente que vai para o arduino e para os motores e fizemos mais um andar.
+
+- O que devemos fazer?
+Atualizar os códigos para funcionarem com o shield de motor e se possível fazer um código para andar em um quadrado.
+
+
 Semana 10:
 - O que dever�amos fazer? 
 Fazer o carrinho andar de forma eficiente em um quadrado.
