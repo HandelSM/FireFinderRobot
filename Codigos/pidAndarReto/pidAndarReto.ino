@@ -1,13 +1,20 @@
 #include <PID_v1.h>
 
-int motorR[2] = { 5, 6 };
-int motorL[2] = { 9, 10 };
+typedef struct motor
+{
+  byte vel;
+  byte way;
+};
+typedef struct motor Motor;
+
+Motor rightM = { 6, 7 };
+Motor leftM = { 5, 4 };
 
 double SetpointRight, InputRight, OutputRight;
 double SetpointLeft, InputLeft, OutputLeft;
 
-PID rightPID(&InputRight, &OutputRight, &SetpointRight, 4, 14, 0, DIRECT);
-PID leftPID(&InputLeft, &OutputLeft, &SetpointLeft, 4, 14, 0, DIRECT);
+PID rightPID(&InputRight, &OutputRight, &SetpointRight, 4, 17, 0, DIRECT);
+PID leftPID(&InputLeft, &OutputLeft, &SetpointLeft, 4, 17, 0, DIRECT);
 
 int encoderRPin = 2;
 int encoderLPin = 3;
@@ -56,10 +63,9 @@ void setup ()
   pinMode( encoderRPin, INPUT );
   pinMode( encoderLPin, INPUT );
   
-  pinMode( motorR[0], OUTPUT );
-  pinMode( motorR[1], OUTPUT );
-  pinMode( motorL[0], OUTPUT );
-  pinMode( motorL[1], OUTPUT );
+  pinMode( rightM.way, OUTPUT );
+  pinMode( leftM.way, OUTPUT );
+
   
   Serial.begin(9600);
 }
@@ -97,9 +103,9 @@ void loop()
   rightPID.Compute();
   leftPID.Compute();
   
-  analogWrite( motorR[0], OutputRight );
-  analogWrite( motorR[1], 0 );
-  analogWrite( motorL[0], OutputLeft );
-  analogWrite( motorL[1], 0 );
+  digitalWrite( rightM.way, HIGH );
+  digitalWrite( leftM.way, HIGH );
+  analogWrite( rightM.vel, OutputRight );
+  analogWrite( leftM.vel, OutputLeft );
 }
 

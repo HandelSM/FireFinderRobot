@@ -10,14 +10,21 @@ NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 #include <PID_v1.h>
 
 //Motor pins
-int motorR[2] = { 5, 6 };
-int motorL[2] = { 9, 10 };
+typedef struct motor
+{
+  byte vel;
+  byte way;
+};
+typedef struct motor Motor;
+
+Motor rightM = { 6, 7 };
+Motor leftM = { 5, 4 };
 
 double SetpointRight, InputRight, OutputRight;
 double SetpointLeft, InputLeft, OutputLeft;
 
-PID rightPID(&InputRight, &OutputRight, &SetpointRight, 2, 6, 0, DIRECT);
-PID leftPID(&InputLeft, &OutputLeft, &SetpointLeft, 2, 6, 0, DIRECT);
+PID rightPID(&InputRight, &OutputRight, &SetpointRight, 1, 5, 0, DIRECT);
+PID leftPID(&InputLeft, &OutputLeft, &SetpointLeft, 1, 5, 0, DIRECT);
 
 boolean turn = false;
 
@@ -63,7 +70,7 @@ void encoder()
   {
     countR++;
 //    Serial.print("Count R: ");
-    Serial.println( countR );
+//    Serial.println( countR );
   }
   
   if ( currentEncoderLeft != lastEncoderLeft )
@@ -78,7 +85,6 @@ void encoder()
 
 float distance()
 {
-  //delay(30);                      // Wait 50ms between pings (about 20 pings/sec). 29ms should be the shortest delay between pings.
   unsigned int uS = sonar.ping(); // Send ping, get ping time in microseconds (uS).
   //Serial.print("Ping: ");
   float cmFromWall = uS / US_ROUNDTRIP_CM; // Convert ping time to distance in cm and print result (0 = outside set distance range)
@@ -94,16 +100,16 @@ void moveFoward()
     rpmR = countR;
     rpmL = countL;
     
-//    Serial.print( "rpmR : " );
-//    Serial.println( rpmR );
-//    Serial.print( "rpmL : " );
-//    Serial.println( rpmL );
+    Serial.print( "rpmR : " );
+    Serial.println( rpmR );
+    Serial.print( "rpmL : " );
+    Serial.println( rpmL );
     
     countR = 0;
     countL = 0;
     
-    //Serial.println( OutputRight );
-    //Serial.println( OutputLeft );
+    Serial.println( OutputRight );
+    Serial.println( OutputLeft );
     
     old = now;
   }
@@ -114,56 +120,35 @@ void moveFoward()
   rightPID.Compute();
   leftPID.Compute();
   
-  analogWrite( motorR[0], OutputRight );
-  analogWrite( motorR[1], 0 );
-  analogWrite( motorL[0], OutputLeft );
-  analogWrite( motorL[1], 0 );
+  digitalWrite( rightM.way, HIGH );
+  digitalWrite( leftM.way, HIGH );
+  analogWrite( rightM.vel, OutputRight );
+  analogWrite( leftM.vel, OutputLeft );
 }
 
 void moveRight()
 {  
-//  //Serial.print( "countR : " );
-//  //Serial.println( countR );
-//  Serial.print( "countL : " );
-//  Serial.println( countL );
-
-//  delay( 1000 );
-//  
-//  analogWrite( motorR[0], 0 );
-//  analogWrite( motorR[1], 0 );
-//  analogWrite( motorL[0], 0 );
-//  analogWrite( motorL[1], 0 );
-//  delay(1000);
-//  old = millis();
-//  turn = false;
-//  countL = 40;
-//  countR = 40;
-//  analogWrite( motorR[0], OutputRight );
-//  analogWrite( motorR[1], 0 );
-//  analogWrite( motorL[0], OutputLeft );
-//  analogWrite( motorL[1], 0 );
-
-  analogWrite( motorR[0], 0 );
-  analogWrite( motorR[1], 255 );//OutputRight * strong);
-  analogWrite( motorL[0], 255 );//OutputLeft * strong);
-  analogWrite( motorL[1], 0 );
+  digitalWrite( rightM.way, LOW );
+  digitalWrite( leftM.way, HIGH );
+  analogWrite( rightM.vel, 255 );
+  analogWrite( leftM.vel, 255 );
   
-  delay( 300 );
+  delay( 150 );
   
-  analogWrite( motorR[0], 0 );
-  analogWrite( motorR[1], 0 );
-  analogWrite( motorL[0], 0 );
-  analogWrite( motorL[1], 0 );
+  digitalWrite( rightM.way, HIGH );
+  digitalWrite( leftM.way, HIGH );
+  analogWrite( rightM.vel, 0 );
+  analogWrite( leftM.vel, 0 );
   
   delay( 1000 );
   
   countL = 0;
   countR = 0;
   
-  analogWrite( motorR[0], OutputRight );
-  analogWrite( motorR[1], 0 );
-  analogWrite( motorL[0], OutputLeft );
-  analogWrite( motorL[1], 0 );
+  digitalWrite( rightM.way, HIGH );
+  digitalWrite( leftM.way, HIGH );
+  analogWrite( rightM.vel, OutputRight );
+  analogWrite( leftM.vel, OutputLeft );
   
   turn = false;
   
@@ -176,9 +161,11 @@ void setup()
   beep(50);
   beep(50);  
   
+  digitalWrite( 8, HIGH ); //Mais um VCC
+  
   //PID
-  SetpointRight = 40;
-  SetpointLeft = 40;
+  SetpointRight = 60;
+  SetpointLeft = 60;
   rightPID.SetMode(AUTOMATIC);
   leftPID.SetMode(AUTOMATIC);
   
@@ -191,10 +178,8 @@ void setup()
   pinMode( ECHO_PIN, INPUT );
   
   //Motor
-  pinMode( motorR[0], OUTPUT );
-  pinMode( motorR[1], OUTPUT );
-  pinMode( motorL[0], OUTPUT );
-  pinMode( motorL[1], OUTPUT );
+  pinMode( rightM.way, OUTPUT );
+  pinMode( leftM.way, OUTPUT );
   
   //Buzzer
   pinMode( BUZZER_PIN, OUTPUT );
@@ -209,10 +194,10 @@ void loop()
   if( flameSensor > 100 || FOGO == true )
   {
     beep( 200 );
-    analogWrite( motorR[0], 0 );
-    analogWrite( motorR[1], 0 );
-    analogWrite( motorL[0], 0 );
-    analogWrite( motorL[1], 0 ); 
+    digitalWrite( rightM.way, HIGH );
+    digitalWrite( leftM.way, HIGH );
+    analogWrite( rightM.vel, 0 );
+    analogWrite( leftM.vel, 0 );
     
     FOGO = true;
   }
