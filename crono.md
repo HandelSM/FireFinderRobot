@@ -1,5 +1,15 @@
 #CRONOGRAMA
 
+Semana 12:
+- O que dever�amos fazer? 
+Atualizar os códigos para funcionarem com o shield de motor e se possível fazer um código para andar em um quadrado.
+
+-  O que fizemos?
+Tentamos fazer o robô andar realmente reto, falhamos novamente, a roda boba cada vez que passa por uma junta de azulejo desviar a trajetória do carinho, mesmo que as rodas estejam andando na mesma velocidade. Por isso compramos mais dois motores para substituir a roda boba. Atualizamos os códigos para funcionarem pelo shield do motor.
+
+- O que devemos fazer?
+Colocar os motores no carinho e fazer ele andar realmente reto.
+
 Semana 11:
 - O que dever�amos fazer? 
 Trabalhar na mecânica do carrinho. (Fazer um andar)
