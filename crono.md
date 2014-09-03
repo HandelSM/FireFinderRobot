@@ -1,5 +1,15 @@
 #CRONOGRAMA
 
+Semana 13:
+- O que dever�amos fazer? 
+Colocar os motores no carinho e fazer ele andar realmente reto.
+
+-  O que fizemos?
+Nada, pois os motores não chegaram.
+
+- O que devemos fazer?
+Colocar os motores no carinho e fazer ele andar realmente reto.
+
 Semana 12:
 - O que dever�amos fazer? 
 Atualizar os códigos para funcionarem com o shield de motor e se possível fazer um código para andar em um quadrado.
