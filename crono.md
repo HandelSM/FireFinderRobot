@@ -1,5 +1,15 @@
 #CRONOGRAMA
 
+Semana 14:
+- O que dever�amos fazer? 
+Colocar os motores no carinho e fazer ele andar realmente reto.
+
+-  O que fizemos?
+Compramos uma esfera de deslizamento, porém ela é pequena. Fizemos o código PID com a lógica de Master->Slave e fizemos um código para rodar 90° a partir do encoder.
+
+- O que devemos fazer?
+Fazer o carrinho realmente andar reto e testar código de andar no quadrado.
+
 Semana 13:
 - O que dever�amos fazer? 
 Colocar os motores no carinho e fazer ele andar realmente reto.
