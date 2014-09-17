@@ -1,5 +1,15 @@
 #CRONOGRAMA
 
+Semana 15:
+- O que dever�amos fazer? 
+Fazer o carrinho realmente andar reto e testar código de andar no quadrado.
+
+-  O que fizemos?
+Trocamos a roda boba por um parafuso e com isso conseguimos andar reto, porém isso era uma solução "porca" então usamos a esfera deslizante ao invés do parafuso (foi feita uma estrutura de madeira para poder usa-la). Colocamos um servo que irá rotacionar o sensor de distância e aprendemos a usa-lo. Pegamos um switch que será usado para ligar e desligar o carrinho, mas ainda não soldamos.
+
+- O que devemos fazer?
+Soldar o switch e fazer a estrutura do quadrado, quando pronto testar o código.
+
 Semana 14:
 - O que dever�amos fazer? 
 Colocar os motores no carinho e fazer ele andar realmente reto.
