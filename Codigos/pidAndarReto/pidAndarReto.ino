@@ -13,8 +13,8 @@ Motor leftM = { 5, 4 };
 double SetpointRight, InputRight, OutputRight;
 double SetpointLeft, InputLeft, OutputLeft;
 
-PID rightPID(&InputRight, &OutputRight, &SetpointRight, 4, 17, 0, DIRECT);
-PID leftPID(&InputLeft, &OutputLeft, &SetpointLeft, 4, 17, 0, DIRECT);
+PID rightPID(&InputRight, &OutputRight, &SetpointRight, 2, 4, 0, DIRECT);
+PID leftPID(&InputLeft, &OutputLeft, &SetpointLeft, 2, 4, 0, DIRECT);
 
 int encoderRPin = 2;
 int encoderLPin = 3;
