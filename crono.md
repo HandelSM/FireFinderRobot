@@ -1,5 +1,15 @@
 #CRONOGRAMA
 
+Semana 16:
+- O que dever�amos fazer? 
+Soldar o switch e fazer a estrutura do quadrado, quando pronto testar o código.
+
+-  O que fizemos?
+Soldamos o switch e fizemos a estrutura do labirinto.
+
+- O que devemos fazer?
+Ir melhorando a lógica de desviar de paredes e gradualmente ir melhorando o labirinto.
+
 Semana 15:
 - O que dever�amos fazer? 
 Fazer o carrinho realmente andar reto e testar código de andar no quadrado.
