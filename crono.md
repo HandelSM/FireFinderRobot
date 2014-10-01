@@ -1,5 +1,15 @@
 #CRONOGRAMA
 
+Semana 17:
+- O que dever�amos fazer? 
+Ir melhorando a lógica de desviar de paredes e gradualmente ir melhorando o labirinto.
+
+-  O que fizemos?
+Mudamos de lugar o sensor de distância acoplado ao servo e adicionamos um outro sensor para ficar constantemente lendo a parede da frente.
+
+- O que devemos fazer?
+Utilizar o novo servor de distância para ficar a uma distância constante da parede ao lado.
+
 Semana 16:
 - O que dever�amos fazer? 
 Soldar o switch e fazer a estrutura do quadrado, quando pronto testar o código.
