@@ -55,30 +55,38 @@ boolean turn = false;
   
   unsigned long now = 0;
   unsigned long old = 0;
-  unsigned long oldHcsr04 = 0;
 //
+  
+unsigned long oldHcsr04 = -50;
 
-int servoPosition = 0;
+boolean servoPosition = false; // false = esquerda; true = direita
 Servo s;
+
+void setServoPos( )
+{
+  if( servoPosition )
+  {
+    s.write( 0 ); 
+  }
+  else
+  {
+    s.write( 170 ); 
+  }
+}
 
 void encoder()
 {
-  //delay(5);
   currentEncoderRight = digitalRead( encoderRPin );
   currentEncoderLeft = digitalRead( encoderLPin );
   
   if ( currentEncoderRight != lastEncoderRight )
   {
     countR++;
-//    Serial.print("Count R: ");
-//    Serial.println( countR );
   }
   
   if ( currentEncoderLeft != lastEncoderLeft )
   {
     countL++;
-//    Serial.print("Count L: ");
-//    Serial.println( countL );
   }
   lastEncoderRight = currentEncoderRight;
   lastEncoderLeft = currentEncoderLeft;
@@ -106,54 +114,67 @@ void moveFoward()
   
   if( gapT > constGap + tolerance && gapT != 0 )
   {
-    stopIt();
+    if( servoPosition )
+    {
+      analogWrite( leftM.vel, 255 );
+    }
+    
+    else
+    {
+      analogWrite( rightM.vel, 255 );
+    }
+    
+    delay(10);
   }
   
   else if( gapT < constGap - tolerance && gapT != 0 )
-  { 
-    stopIt();
-  }
-  
-  else
   {
-    if( now - old >= 500 )
+    if( servoPosition )
     {
-      Serial.println( gapT );
-      
-      rpmR = countR;
-      rpmL = countL;
-      
-  //    Serial.print( "rpmR : " );
-  //    Serial.println( rpmR );
-  //    Serial.print( "rpmL : " );
-  //    Serial.println( rpmL );
-      
-      countR = 0;
-      countL = 0;
-      
-  //    Serial.println( OutputRight );
-  //    Serial.println( OutputLeft );
-      
-      old = now;
+      analogWrite( rightM.vel, 255 );
     }
     
-    InputRight = rpmR;
-    InputLeft = rpmL;
+    else
+    {
+      analogWrite( leftM.vel, 255 );
+    }
     
-    rightPID.Compute();
-    leftPID.Compute();
-    
-    digitalWrite( rightM.way, HIGH );
-    digitalWrite( leftM.way, HIGH );
-    analogWrite( rightM.vel, OutputRight );
-    analogWrite( leftM.vel, OutputLeft );
+    delay(10);
   }
+  
+  if( now - old >= 500 )
+  {    
+    rpmR = countR;
+    rpmL = countL;
+    
+//    Serial.print( "rpmR : " );
+//    Serial.println( rpmR );
+//    Serial.print( "rpmL : " );
+//    Serial.println( rpmL );
+    
+    countR = 0;
+    countL = 0;
+    
+//    Serial.println( OutputRight );
+//    Serial.println( OutputLeft );
+    
+    old = now;
+  }
+  
+  InputRight = rpmR;
+  InputLeft = rpmL;
+  
+  rightPID.Compute();
+  leftPID.Compute();
+  
+  digitalWrite( rightM.way, HIGH );
+  digitalWrite( leftM.way, HIGH );
+  analogWrite( rightM.vel, OutputRight );
+  analogWrite( leftM.vel, OutputLeft );
 }
 
 void setup()
-{
-  //digitalWrite( 8, HIGH ); //Mais um VCC  
-  
+{  
   //Encoder
   pinMode( encoderRPin, INPUT );
   pinMode( encoderLPin, INPUT );
@@ -167,12 +188,10 @@ void setup()
   //Motor
   pinMode( rightM.way, OUTPUT );
   pinMode( leftM.way, OUTPUT );
-  
+
   //Servo
   s.attach(SERVO);
-  Serial.begin(9600);
-  s.write(servoPosition);
-  delay(1000);
+  setServoPos();
   
   //PID
   SetpointRight = 50;
@@ -180,16 +199,11 @@ void setup()
   rightPID.SetMode(AUTOMATIC);
   leftPID.SetMode(AUTOMATIC);
   
-  gapF = distance( frontSensor );
-  gapT = distance( turnSensor );
-  
   Serial.begin(9600);
 }
 
 void loop()
-{   
-  //Serial.println( distance(turnSensor) );
-  
+{
   now = millis();
 
   if( now - oldHcsr04 >= 50 )
@@ -211,8 +225,8 @@ void loop()
     {
       digitalWrite( rightM.way, LOW );
       digitalWrite( leftM.way, LOW );
-      analogWrite( rightM.vel, 255 );
-      analogWrite( leftM.vel, 255 );
+      analogWrite( rightM.vel, OutputRight );
+      analogWrite( leftM.vel, OutputLeft );
       delay(20);
       turn = true;
     }
