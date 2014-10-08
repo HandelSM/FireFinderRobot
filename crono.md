@@ -1,5 +1,16 @@
 #CRONOGRAMA
 
+Semana 18:
+
+O que dever�amos fazer?
+Utilizar o novo servor de distância para ficar a uma distância constante da parede ao lado.
+
+O que fizemos?
+Um código para o carrinho ir tentando ficar a uma distância constante da parede, porém não foi testado já que o carrinho quebrou.
+
+O que devemos fazer?
+Reconstruir o robô e testar o código, caso errado debuga-lo.
+
 Semana 17:
 - O que dever�amos fazer? 
 Ir melhorando a lógica de desviar de paredes e gradualmente ir melhorando o labirinto.
