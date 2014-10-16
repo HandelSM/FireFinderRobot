@@ -1,5 +1,16 @@
 #CRONOGRAMA
 
+Semana 19:
+
+O que dever�amos fazer?
+Reconstruir o robô e testar o código, caso errado debuga-lo.
+
+O que fizemos?
+Reconstruimos o robô, fizemos ele de madeira.
+
+O que devemos fazer?
+Código para a feira de ciências, que será desviar de paredes, achar fogo, apitar quando acha-lo e ficar a uma distância constante da parede.
+
 Semana 18:
 
 O que dever�amos fazer?
