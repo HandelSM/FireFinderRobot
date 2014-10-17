@@ -7,8 +7,8 @@ typedef struct motor
 };
 typedef struct motor Motor;
 
-Motor rightM = { 6, 7 };
-Motor leftM = { 5, 4 };
+Motor rightM = { 5, 4 };
+Motor leftM = { 6, 7 };
 
 double SetpointRight, InputRight, OutputRight;
 double SetpointLeft, InputLeft, OutputLeft;
@@ -54,8 +54,8 @@ void encoder()
 
 void setup ()
 {
-  SetpointRight = 20;
-  SetpointLeft = 20;
+  SetpointRight = 40;
+  SetpointLeft = 40;
   
   rightPID.SetMode(AUTOMATIC);
   leftPID.SetMode(AUTOMATIC);
