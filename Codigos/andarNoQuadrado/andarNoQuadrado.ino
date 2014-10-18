@@ -127,20 +127,34 @@ void moveFoward()
 }
 
 void moveRight()
-{  
-  digitalWrite( rightM.way, LOW );
-  digitalWrite( leftM.way, HIGH );
-  analogWrite( rightM.vel, 255 );
-  analogWrite( leftM.vel, 255 );
+{ 
+  byte randNumber = random(2);
   
-  delay( 150 );
+  Serial.println(randNumber);
+  
+  if( randNumber )
+  {
+    digitalWrite( rightM.way, LOW );
+    digitalWrite( leftM.way, HIGH );
+    analogWrite( rightM.vel, OutputRight );
+    analogWrite( leftM.vel, OutputLeft );
+  }
+  
+  else
+  {
+    digitalWrite( rightM.way, HIGH );
+    digitalWrite( leftM.way, LOW );
+    analogWrite( rightM.vel, OutputRight );
+    analogWrite( leftM.vel, OutputLeft );    
+  }
+  delay( 250 );
   
   digitalWrite( rightM.way, HIGH );
   digitalWrite( leftM.way, HIGH );
   analogWrite( rightM.vel, 0 );
   analogWrite( leftM.vel, 0 );
   
-  delay( 1000 );
+  delay( 800 );
   
   countL = 0;
   countR = 0;
