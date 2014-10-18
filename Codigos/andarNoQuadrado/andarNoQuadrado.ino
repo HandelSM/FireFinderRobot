@@ -17,20 +17,20 @@ typedef struct motor
 };
 typedef struct motor Motor;
 
-Motor rightM = { 6, 7 };
-Motor leftM = { 5, 4 };
+Motor rightM = { 5, 4 };
+Motor leftM = { 6, 7 };
 
 double SetpointRight, InputRight, OutputRight;
 double SetpointLeft, InputLeft, OutputLeft;
 
-PID rightPID(&InputRight, &OutputRight, &SetpointRight, 1, 5, 0, DIRECT);
-PID leftPID(&InputLeft, &OutputLeft, &SetpointLeft, 1, 5, 0, DIRECT);
+PID rightPID(&InputRight, &OutputRight, &SetpointRight, 2, 3, 0, DIRECT);
+PID leftPID(&InputLeft, &OutputLeft, &SetpointLeft, 2, 3, 0, DIRECT);
 
 boolean turn = false;
 
 //Encoder
 int encoderRPin = 2;
-int encoderLPin = 3;
+int encoderLPin = 8;
 int countR = 0;
 int countL = 0;
 int rpmR = 0;
@@ -49,7 +49,7 @@ float gap = 0;
 
 boolean FOGO = false;
 
-#define BUZZER_PIN 11
+#define BUZZER_PIN 3
 
 void beep(unsigned char delayms)
 {
