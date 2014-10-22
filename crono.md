@@ -1,5 +1,16 @@
 #CRONOGRAMA
 
+Semana 20:
+
+O que dever�amos fazer?
+Código para a feira de ciências, que será desviar de paredes, achar fogo, apitar quando acha-lo e ficar a uma distância constante da parede.
+
+O que fizemos?
+Código para a feira de ciências, que desvia de paredes, acha fogo, apita quando o acha e melhoramos o labirinto
+
+O que devemos fazer?
+Código para ficar a uma distância constante da parede.
+
 Semana 19:
 
 O que dever�amos fazer?
