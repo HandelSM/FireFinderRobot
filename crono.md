@@ -1,5 +1,16 @@
 #CRONOGRAMA
 
+Semana 21:
+
+O que deveríamos fazer?
+Código para ficar a uma distância constante da parede.
+
+O que fizemos? 
+Código para ficar a uma distância constante da parede.
+
+O que devemos fazer?
+Testar código, melhorá-lo.
+
 Semana 20:
 
 O que dever�amos fazer?
