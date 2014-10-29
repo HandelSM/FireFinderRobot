@@ -1,3 +1,4 @@
+//HCSR04 lib and pins
 #include <NewPing.h>
 #include <Servo.h>
 #include <PID_v1.h>
@@ -19,6 +20,11 @@
 NewPing frontSensor(TRIGGER_PIN_F, ECHO_PIN_F, MAX_DISTANCE);
 NewPing turnSensor(TRIGGER_PIN_T, ECHO_PIN_T, MAX_DISTANCE);
 
+float gapF = 0;
+float gapT = 0;
+const byte tolerance = 5;
+int constGap = 12;
+
 //Motor pins
 typedef struct motor
 {
@@ -30,7 +36,8 @@ typedef struct motor Motor;
 Motor rightM = { 5, 4 };
 Motor leftM = { 6, 7 };
 
-//
+Motor current;
+Motor other;
 
 double SetpointRight, InputRight, OutputRight;
 double SetpointLeft, InputLeft, OutputLeft;
@@ -40,10 +47,8 @@ PID leftPID(&InputLeft, &OutputLeft, &SetpointLeft, 2, 3, 0, DIRECT);
 
 boolean FOGO = false;
 
-//Motor current;
-//Motor other;
-
 //Encoder
+//
   int encoderRPin = 2;
   int encoderLPin = 8;
   int countR = 0;
@@ -119,13 +124,14 @@ void stopIt()
     analogWrite( leftM.vel, 0 );
 }
 
-void adjust ()
-(
-  int tolerance T = 10;
+void adjust()
+{
   int sideDistance = distance (turnSensor);
   
-  if (sideDistance < tolerance)
+  if (sideDistance < constGap - tolerance)
    {
+    Serial.println("Entrei if ");
+
      digitalWrite(current.way, HIGH);
      digitalWrite(other.way, HIGH);
      analogWrite( current.vel, 255 );
@@ -134,20 +140,23 @@ void adjust ()
      
    }
    
-  else (sideDistance > tolerance)
+  else if (sideDistance > constGap + tolerance)
   {
+    
+     Serial.println("Entrei else");
      digitalWrite(current.way, HIGH);
      digitalWrite(other.way, HIGH);
      analogWrite( current.vel, 150 );
      analogWrite( other.vel, 255 );
      delay( 150 );
- 
-  };
+  }
+}
 
-);
 
 void moveFoward()
 {
+ 
+  adjust();
   encoder();
   
   if( now - old >= 500 )
@@ -156,15 +165,15 @@ void moveFoward()
     rpmL = countL;
     
     Serial.print( "rpmR : " );
-    Serial.println( rpmR );
+   Serial.println( rpmR );
     Serial.print( "rpmL : " );
     Serial.println( rpmL );
     
     countR = 0;
     countL = 0;
     
-    Serial.println( OutputRight );
-    Serial.println( OutputLeft );
+   // Serial.println( OutputRight );
+   // Serial.println( OutputLeft );
     
     old = now;
   }
@@ -175,14 +184,77 @@ void moveFoward()
   rightPID.Compute();
   leftPID.Compute();
   
-  adjust();
-  
   digitalWrite( rightM.way, HIGH );
   digitalWrite( leftM.way, HIGH );
   analogWrite( rightM.vel, OutputRight );
   analogWrite( leftM.vel, OutputLeft );
   
-  void resetVariables()
+  
+  
+//  encoder();
+//  
+//  if( gapT > constGap + tolerance && gapT != 0 )
+//  {
+//    if( servoPosition )
+//    {
+//      analogWrite( leftM.vel, 255 );
+//    }
+//    
+//    else
+//    {
+//      analogWrite( rightM.vel, 255 );
+//    }
+//    
+//    delay(10);
+//  }
+//  
+//  else if( gapT < constGap - tolerance && gapT != 0 )
+//  {
+//    if( servoPosition )
+//    {
+//      analogWrite( rightM.vel, 255 );
+//    }
+//    
+//    else
+//    {
+//      analogWrite( leftM.vel, 255 );
+//    }
+//    
+//    delay(10);
+//  }
+//  
+//  if( now - old >= 500 )
+//  {    
+//    rpmR = countR;
+//    rpmL = countL;
+//    
+////    Serial.print( "rpmR : " );
+////    Serial.println( rpmR );
+////    Serial.print( "rpmL : " );
+////    Serial.println( rpmL );
+//    
+//    countR = 0;
+//    countL = 0;
+//    
+////    Serial.println( OutputRight );
+////    Serial.println( OutputLeft );
+//    
+//    old = now;
+//  }
+//  
+//  InputRight = rpmR;
+//  InputLeft = rpmL;
+//  
+//  rightPID.Compute();
+//  leftPID.Compute();
+//  
+//  digitalWrite( rightM.way, HIGH );
+//  digitalWrite( leftM.way, HIGH );
+//  analogWrite( rightM.vel, OutputRight );
+//  analogWrite( leftM.vel, OutputLeft );
+}
+
+void resetVariables()
 {
   countL = 0;
   countR = 0;
@@ -221,55 +293,78 @@ void turnLeft()
   resetVariables();
 }
 
-void whereToGo();
+void whereGo()
 {
-  int frontGap = distance(frontSensor);
-  int tLeftDistance;
-  int tRightDistance;
+  delay(50);
   
-  if (frontGap > 17 || frontGap == 0) 
+  gapF = distance( frontSensor );
+  
+  if( gapF > 20 || gapF == 0 )
   {
-    moveFoward();
+//    if( rightGap <= leftGap )
+//    {
+//      constGap = rightGap;
+//    }
+//    else
+//    {
+//      constGap = leftGap;
+//      servoPosition = false;
+//      setServoPos();
+//      delay(1500);
+//    }
+  
   }
-  
-  else 
+  else
   {
-    servoPosition = true; 
-    setServoPos();
-    delay(1500);
-    tRightDistance = distance (turnSensor);
+    int rightGap;
+    int leftGap;
     
     servoPosition = false;
     setServoPos();
     delay(1500);
-    tLeftDistance = distance (turnSensor);
-   
-     if (tRightDistance >= tLeftDistance)
-     {
-       turnRight();
-       servoPosition = false;
-       setServoPos();
-      //current = leftM;
-      // other = rightM;
-       delay(1500);
-     }  
-     
-     else 
-     
-     {
-      turnLeft(); 
-      servoPosition = true;
-      setServoPos();
-      delay(1500);   
-      //current = righttM;
-      // other = leftM;
-     }
-     
+    
+    leftGap = distance( turnSensor );
+    
+    servoPosition = true;
+    setServoPos();
+    delay(1500);
+    
+    rightGap = distance( turnSensor );
+    delay(30);
+    
+    if( rightGap < 15 )
+    {
+      if(leftGap < 15)
+      {
+        turnRight();
+        current = leftM;
+        other = rightM;
+      }
+      else
+      {
+        turnLeft();
+        current = rightM;
+        other = leftM;
+      }
+    }
+    
+    else
+    {
+      if( rightGap >= leftGap )
+      {
+        turnRight();
+      }
+      else
+      {
+        turnLeft();
+      }
+    }
+    
+    whereGo();
   }
- 
-  whereToGo();
+  
   resetVariables();
-};
+}
 
 void setup()
 {  
@@ -305,7 +400,7 @@ void setup()
   
   Serial.begin(9600);
   
-  whereToGo();
+  whereGo();
 }
 
 void loop()
@@ -313,9 +408,9 @@ void loop()
   
   int flameSensor = analogRead(FLAME);
   
-  Serial.println(flameSensor);
+  //Serial.println(flameSensor);
   
-  if( flameSensor > 150 || FOGO == true )
+  if( flameSensor > 1000000 || FOGO == true )
   {
     beep( 200 );
     stopIt(); 
@@ -334,6 +429,11 @@ void loop()
       
       oldHcsr04 = now;
     }
+  
+    if( (gapF > 17 || gapF == 0) )
+    {
+      moveFoward();
+    }
     
     else
     {
@@ -343,8 +443,7 @@ void loop()
       analogWrite( leftM.vel, 255 );
       delay(10);
       stopIt();
-      whereToGo();
+      whereGo();
     }
   }
 }
-
