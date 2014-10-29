@@ -29,6 +29,7 @@ typedef struct motor Motor;
 
 Motor rightM = { 5, 4 };
 Motor leftM = { 6, 7 };
+
 //
 
 double SetpointRight, InputRight, OutputRight;
@@ -38,6 +39,9 @@ PID rightPID(&InputRight, &OutputRight, &SetpointRight, 2, 3, 0, DIRECT);
 PID leftPID(&InputLeft, &OutputLeft, &SetpointLeft, 2, 3, 0, DIRECT);
 
 boolean FOGO = false;
+
+//Motor current;
+//Motor other;
 
 //Encoder
   int encoderRPin = 2;
@@ -115,6 +119,33 @@ void stopIt()
     analogWrite( leftM.vel, 0 );
 }
 
+void adjust ()
+(
+  int tolerance T = 10;
+  int sideDistance = distance (turnSensor);
+  
+  if (sideDistance < tolerance)
+   {
+     digitalWrite(current.way, HIGH);
+     digitalWrite(other.way, HIGH);
+     analogWrite( current.vel, 255 );
+     analogWrite( other.vel, 150 );
+     delay( 150 );
+     
+   }
+   
+  else (sideDistance > tolerance)
+  {
+     digitalWrite(current.way, HIGH);
+     digitalWrite(other.way, HIGH);
+     analogWrite( current.vel, 150 );
+     analogWrite( other.vel, 255 );
+     delay( 150 );
+ 
+  };
+
+);
+
 void moveFoward()
 {
   encoder();
@@ -143,6 +174,8 @@ void moveFoward()
   
   rightPID.Compute();
   leftPID.Compute();
+  
+  adjust();
   
   digitalWrite( rightM.way, HIGH );
   digitalWrite( leftM.way, HIGH );
@@ -203,9 +236,12 @@ void whereToGo();
   {
     servoPosition = true; 
     setServoPos();
+    delay(1500);
     tRightDistance = distance (turnSensor);
+    
     servoPosition = false;
     setServoPos();
+    delay(1500);
     tLeftDistance = distance (turnSensor);
    
      if (tRightDistance >= tLeftDistance)
@@ -213,6 +249,9 @@ void whereToGo();
        turnRight();
        servoPosition = false;
        setServoPos();
+      //current = leftM;
+      // other = rightM;
+       delay(1500);
      }  
      
      else 
@@ -220,36 +259,17 @@ void whereToGo();
      {
       turnLeft(); 
       servoPosition = true;
-      setServoPos();   
+      setServoPos();
+      delay(1500);   
+      //current = righttM;
+      // other = leftM;
      }
      
   }
-
+ 
+  whereToGo();
+  resetVariables();
 };
-
-void adjust
-(
-  int tolerance T = 10;
-  int sideDistance = distance (turnSensor);
-  
-  if (sideDistance < tolerance)
-   {
-     digitalWrite(rightM.way, HIGH);
-     digitalWrite(leftM.way, HIGH);
-     analogWrite( rightM.vel, 255 );
-     analogWrite( leftM.vel, 150 );
-     delay( 150 );
-     
-   }
-   
-  if (sideDistance > tolerance) 
-   {
-    
-   }
-
-
-);
-
 
 void setup()
 {  
@@ -285,7 +305,7 @@ void setup()
   
   Serial.begin(9600);
   
-  whereGo();
+  whereToGo();
 }
 
 void loop()
@@ -323,7 +343,7 @@ void loop()
       analogWrite( leftM.vel, 255 );
       delay(10);
       stopIt();
-      whereGo();
+      whereToGo();
     }
   }
 }
