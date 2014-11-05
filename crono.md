@@ -1,5 +1,16 @@
 #CRONOGRAMA
 
+Semana 22:
+
+O que deveríamos fazer?
+Testar código, melhorá-lo. Iniciar relatório.
+
+O que fizemos? 
+Testamos código. Iniciamos relatório.
+
+O que devemos fazer?
+Finalizar relatório, discutir ultima medida necessária, finalizar projeto, iniciar apresentação.
+
 Semana 21:
 
 O que deveríamos fazer?
@@ -9,7 +20,7 @@ O que fizemos?
 Código para ficar a uma distância constante da parede.
 
 O que devemos fazer?
-Testar código, melhorá-lo.
+Testar código, melhorá-lo. Iniciar relatório.
 
 Semana 20:
 
