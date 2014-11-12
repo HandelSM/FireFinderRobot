@@ -1,5 +1,16 @@
 #CRONOGRAMA
 
+Semana 23: 
+
+O que deveríamos fazer?
+Finalizar relatório, discutir ultima medida necessária, finalizar projeto, iniciar apresentação.
+
+O que fizemos? 
+Demos continuidade ao relatório, decidimos última modificação no projeto.
+
+O que devemos fazer?
+Finalizar relatório, iniciar apresentação, realizar esta última alteração.
+
 Semana 22:
 
 O que deveríamos fazer?
