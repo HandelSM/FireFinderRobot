@@ -363,6 +363,7 @@ void loop()
     {
       if(!turned)
       {
+        stopIt();
         whereGo();
         turned = true;
       }
